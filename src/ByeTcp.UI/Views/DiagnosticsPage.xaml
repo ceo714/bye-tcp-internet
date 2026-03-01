@@ -1,0 +1,157 @@
+<Page
+    x:Class="ByeTcp.UI.Views.DiagnosticsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:ByeTcp.UI.ViewModels"
+    mc:Ignorable="d">
+
+    <Grid Padding="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0" Text="Network Diagnostics" Style="{StaticResource TitleLargeTextBlock}" />
+
+        <!-- Ping Settings -->
+        <CardControl Grid.Row="1" Margin="0,16,0,16">
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16">
+                    <StackPanel>
+                        <TextBlock Text="Target Host" Style="{StaticResource CaptionTextBlockStyle}" />
+                        <TextBox 
+                            Text="{Binding TargetHost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Width="200"
+                            PlaceholderText="8.8.8.8" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Count" Style="{StaticResource CaptionTextBlockStyle}" />
+                        <NumberBox 
+                            Value="{Binding PingCount, Mode=TwoWay}"
+                            Minimum="1" Maximum="100"
+                            Width="100" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Timeout (ms)" Style="{StaticResource CaptionTextBlockStyle}" />
+                        <NumberBox 
+                            Value="{Binding PingTimeout, Mode=TwoWay}"
+                            Minimum="100" Maximum="10000"
+                            Width="120" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Bottom">
+                    <Button 
+                        Content="Start" 
+                        Icon="Play"
+                        Command="{Binding RunPingCommand}"
+                        IsEnabled="{Binding IsPinging, Converter={StaticResource BoolNegationConverter}}" />
+                    <Button 
+                        Content="Stop" 
+                        Icon="Stop"
+                        Command="{Binding StopPingCommand}"
+                        IsEnabled="{Binding IsPinging}" />
+                </StackPanel>
+            </Grid>
+        </CardControl>
+
+        <!-- Results -->
+        <Grid Grid.Row="2" RowSpacing="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Statistics -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="16">
+                <StackPanel Width="120" Padding="16" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="8">
+                    <TextBlock Text="Min" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock 
+                        Text="{Binding MinMs, StringFormat={}{0} ms}" 
+                        Style="{StaticResource SubtitleTextBlock}" 
+                        FontWeight="Bold" />
+                </StackPanel>
+                <StackPanel Width="120" Padding="16" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="8">
+                    <TextBlock Text="Max" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock 
+                        Text="{Binding MaxMs, StringFormat={}{0} ms}" 
+                        Style="{StaticResource SubtitleTextBlock}" 
+                        FontWeight="Bold" />
+                </StackPanel>
+                <StackPanel Width="120" Padding="16" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="8">
+                    <TextBlock Text="Average" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock 
+                        Text="{Binding AvgMs, StringFormat={}{0} ms}" 
+                        Style="{StaticResource SubtitleTextBlock}" 
+                        FontWeight="Bold" />
+                </StackPanel>
+                <StackPanel Width="120" Padding="16" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="8">
+                    <TextBlock Text="Loss" Style="{StaticResource CaptionTextBlockStyle}" />
+                    <TextBlock 
+                        Text="{Binding PacketLossCount, StringFormat={}{0} packets}" 
+                        Style="{StaticResource SubtitleTextBlock}" 
+                        FontWeight="Bold"
+                        Foreground="{Binding PacketLossCount, Converter={StaticResource LossToColorConverter}}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Results Table -->
+            <ListView 
+                Grid.Row="1"
+                ItemsSource="{Binding PingResults}"
+                Margin="0,8,0,0">
+                <ListView.Header>
+                    <GridViewHeaderRowPresenter>
+                        <GridViewColumn Header="Seq" Width="60">
+                            <TextBlock Text="#" Style="{StaticResource CaptionTextBlockStyle}" />
+                        </GridViewColumn>
+                        <GridViewColumn Header="Response Time" Width="120">
+                            <TextBlock Text="Time (ms)" Style="{StaticResource CaptionTextBlockStyle}" />
+                        </GridViewColumn>
+                        <GridViewColumn Header="Status" Width="150">
+                            <TextBlock Text="Status" Style="{StaticResource CaptionTextBlockStyle}" />
+                        </GridViewColumn>
+                    </GridViewHeaderRowPresenter>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnSpacing="16" Padding="0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBlock Grid.Column="0" Text="{Binding SequenceNumber}" />
+                            <TextBlock Grid.Column="1">
+                                <Run Text="{Binding ResponseTimeMs}" />
+                                <Run Text="ms" />
+                            </TextBlock>
+                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                <FontIcon 
+                                    Visibility="{Binding TimedOut, Converter={StaticResource BoolNegationToVisibilityConverter}}"
+                                    Glyph="&#xE73E;" 
+                                    Foreground="Green" 
+                                    FontSize="14" />
+                                <TextBlock 
+                                    Visibility="{Binding TimedOut, Converter={StaticResource BoolToVisibilityConverter}}"
+                                    Text="Request timed out" 
+                                    Foreground="Red" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Grid>
+</Page>

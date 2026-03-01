@@ -1,0 +1,65 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:ByeTcp.UI.Controls">
+
+    <!-- CardControl Style -->
+    <Style TargetType="controls:CardControl">
+        <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Margin" Value="0,8" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:CardControl">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                        <ContentPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- CardControl Style for Grid usage -->
+    <Style x:Key="CardControlStyle" TargetType="Border">
+        <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Margin" Value="0,8" />
+    </Style>
+
+    <!-- Badge Style -->
+    <Style x:Key="InfoBadgeStyle" TargetType="TextBlock">
+        <Setter Property="Background" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <!-- Metric Card Style -->
+    <Style x:Key="MetricCardStyle" TargetType="StackPanel">
+        <Setter Property="Background" Value="{ThemeResource LayerFillColorDefaultBrush}" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Spacing" Value="8" />
+    </Style>
+
+    <!-- Section Header Style -->
+    <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="Foreground" Value="{ThemeResource TextOnAccentFillColorPrimary}" />
+    </Style>
+</ResourceDictionary>
