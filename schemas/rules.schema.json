@@ -1,0 +1,157 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://bye-tcp.internet/schemas/v2/rules.schema.json",
+  "title": "Bye-TCP Rules Configuration",
+  "description": "Schema for profile switching rules",
+  "type": "object",
+  "required": ["version", "schemaVersion", "rules"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Version of the configuration file"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}$",
+      "description": "Schema version (YYYY-MM format)"
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "priority", "profile"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "Unique rule identifier"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000,
+            "description": "Rule priority (higher = more important)"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 512,
+            "description": "Rule description"
+          },
+          "profile": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "Target profile ID"
+          },
+          "minDuration": {
+            "type": "string",
+            "pattern": "^\\d{1,2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "description": "Minimum duration before switching (HH:MM:SS format)"
+          },
+          "cooldown": {
+            "type": "string",
+            "pattern": "^\\d{1,2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "description": "Cooldown period before re-applying (HH:MM:SS format)"
+          },
+          "conditions": {
+            "type": "object",
+            "properties": {
+              "process": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256,
+                    "description": "Process name (e.g., cs2.exe)"
+                  },
+                  "state": {
+                    "type": "string",
+                    "enum": ["running", "exited"],
+                    "description": "Process state condition"
+                  },
+                  "pathPattern": {
+                    "type": "string",
+                    "maxLength": 512,
+                    "description": "Wildcard pattern for process path"
+                  }
+                },
+                "required": ["name"],
+                "additionalProperties": false
+              },
+              "network": {
+                "type": "object",
+                "properties": {
+                  "minRttMs": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Minimum RTT in milliseconds"
+                  },
+                  "maxRttMs": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Maximum RTT in milliseconds"
+                  },
+                  "minPacketLossPercent": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100,
+                    "description": "Minimum packet loss percentage"
+                  },
+                  "maxPacketLossPercent": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100,
+                    "description": "Maximum packet loss percentage"
+                  },
+                  "minQuality": {
+                    "type": "string",
+                    "enum": ["unknown", "excellent", "good", "fair", "poor", "critical"],
+                    "description": "Minimum network quality"
+                  },
+                  "maxQuality": {
+                    "type": "string",
+                    "enum": ["unknown", "excellent", "good", "fair", "poor", "critical"],
+                    "description": "Maximum network quality"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "time": {
+                "type": "object",
+                "properties": {
+                  "startTime": {
+                    "type": "string",
+                    "pattern": "^\\d{1,2}:\\d{2}:\\d{2}$",
+                    "description": "Start time of day (HH:MM:SS)"
+                  },
+                  "endTime": {
+                    "type": "string",
+                    "pattern": "^\\d{1,2}:\\d{2}:\\d{2}$",
+                    "description": "End time of day (HH:MM:SS)"
+                  },
+                  "daysOfWeek": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+                    },
+                    "description": "Days of week when rule applies"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

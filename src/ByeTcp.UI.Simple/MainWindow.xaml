@@ -1,0 +1,189 @@
+<Window
+    x:Class="ByeTcp.UI.Simple.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Bye-TCP Internet v2.0"
+    Width="900"
+    Height="650">
+
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Spacing="8">
+            <TextBlock Text="📡 Bye-TCP Internet v2.0" 
+                       FontSize="28" 
+                       FontWeight="Bold" 
+                       Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+            <TextBlock Text="Адаптивный оптимизатор TCP/IP для Windows" 
+                       FontSize="14" 
+                       Foreground="Gray" />
+        </StackPanel>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Profiles Panel -->
+            <Border Grid.Column="0" 
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="16">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Профили" 
+                               FontSize="18" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,0,8" />
+                    
+                    <Button x:Name="GamingButton" 
+                            Content="🎮 Gaming (Low Latency)" 
+                            HorizontalAlignment="Stretch"
+                            Click="Profile_Click"
+                            Tag="gaming" />
+                    
+                    <Button x:Name="TorrentButton" 
+                            Content="📥 Torrent (High Throughput)" 
+                            HorizontalAlignment="Stretch"
+                            Click="Profile_Click"
+                            Tag="torrent" />
+                    
+                    <Button x:Name="StreamingButton" 
+                            Content="📺 Streaming" 
+                            HorizontalAlignment="Stretch"
+                            Click="Profile_Click"
+                            Tag="streaming" />
+                    
+                    <Button x:Name="WebButton" 
+                            Content="🌐 Web Browsing" 
+                            HorizontalAlignment="Stretch"
+                            Click="Profile_Click"
+                            Tag="web" />
+                    
+                    <Button x:Name="DefaultButton" 
+                            Content="⚙️ Windows Default" 
+                            HorizontalAlignment="Stretch"
+                            Click="Profile_Click"
+                            Tag="default" />
+
+                    <Border Background="{ThemeResource SystemFillColorAttentionBrush}"
+                            CornerRadius="4"
+                            Padding="8"
+                            Margin="0,16,0,0">
+                        <TextBlock Text="⚠️ Требуется запуск от Administrator для применения настроек"
+                                   TextWrapping="Wrap"
+                                   FontSize="11"
+                                   Foreground="White" />
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Status Panel -->
+            <Border Grid.Column="1" 
+                    Margin="16,0,0,0"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="16">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Статус" 
+                               FontSize="18" 
+                               FontWeight="SemiBold" />
+
+                    <!-- Current Settings -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Текущие настройки TCP/IP:" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" />
+                        <Border Background="{ThemeResource LayerFillColorDefaultBrush}"
+                                CornerRadius="4"
+                                Padding="12">
+                            <StackPanel Spacing="4">
+                                <TextBlock x:Name="AutoTuningText" 
+                                           FontSize="12" />
+                                <TextBlock x:Name="CongestionText" 
+                                           FontSize="12" />
+                                <TextBlock x:Name="EcnText" 
+                                           FontSize="12" />
+                                <TextBlock x:Name="TimestampsText" 
+                                           FontSize="12" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Action Buttons -->
+                    <StackPanel Spacing="8" Margin="0,8,0,0">
+                        <Button x:Name="RefreshButton"
+                                Content="🔄 Обновить" 
+                                HorizontalAlignment="Left"
+                                Click="Refresh_Click" />
+                        
+                        <Button x:Name="ApplyButton"
+                                Content="✅ Применить выбранный" 
+                                HorizontalAlignment="Left"
+                                Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                Foreground="White"
+                                Click="Apply_Click" />
+                        
+                        <Button x:Name="BackupButton"
+                                Content="💾 Создать резервную копию" 
+                                HorizontalAlignment="Left"
+                                Click="Backup_Click" />
+                    </StackPanel>
+
+                    <!-- Log Output -->
+                    <StackPanel Spacing="8" Margin="0,8,0,0">
+                        <TextBlock Text="Журнал:" 
+                                   FontSize="14" 
+                                   FontWeight="SemiBold" />
+                        <Border Background="Black"
+                                CornerRadius="4"
+                                Padding="12"
+                                Height="200">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <TextBlock x:Name="LogText" 
+                                           FontFamily="Consolas" 
+                                           FontSize="11" 
+                                           TextWrapping="Wrap" 
+                                           Foreground="LightGreen" />
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" 
+                Margin="0,20,0,0"
+                Padding="16"
+                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                CornerRadius="8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Grid.Column="0" 
+                           VerticalAlignment="Center"
+                           Text="© 2026 Bye-TCP Internet Project | MIT License" 
+                           Foreground="Gray" />
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="16">
+                    <HyperlinkButton Content="GitHub" NavigateUri="https://github.com" />
+                    <HyperlinkButton Content="Документация" NavigateUri="https://github.com" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

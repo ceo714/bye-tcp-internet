@@ -1,0 +1,80 @@
+<Window x:Class="ByeTcp.UI.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="📡 Bye-TCP Internet v2.0" 
+        Height="600" Width="850"
+        WindowStartupLocation="CenterScreen">
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="📡 Bye-TCP Internet v2.0" FontSize="28" FontWeight="Bold" Foreground="#0078D4"/>
+            <TextBlock Text="Адаптивный оптимизатор TCP/IP для Windows" FontSize="14" Foreground="Gray"/>
+        </StackPanel>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Profiles -->
+            <Border Grid.Column="0" Background="#F5F5F5" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="8" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Профили" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                    
+                    <Button x:Name="GamingBtn" Content="🎮 Gaming" HorizontalAlignment="Stretch" Margin="0,5" Padding="10" Click="Profile_Click" Tag="gaming"/>
+                    <Button x:Name="TorrentBtn" Content="📥 Torrent" HorizontalAlignment="Stretch" Margin="0,5" Padding="10" Click="Profile_Click" Tag="torrent"/>
+                    <Button x:Name="StreamingBtn" Content="📺 Streaming" HorizontalAlignment="Stretch" Margin="0,5" Padding="10" Click="Profile_Click" Tag="streaming"/>
+                    <Button x:Name="WebBtn" Content="🌐 Web" HorizontalAlignment="Stretch" Margin="0,5" Padding="10" Click="Profile_Click" Tag="web"/>
+                    <Button x:Name="DefaultBtn" Content="⚙️ Default" HorizontalAlignment="Stretch" Margin="0,5" Padding="10" Click="Profile_Click" Tag="default"/>
+
+                    <Border Background="#FF8C00" CornerRadius="4" Padding="8" Margin="0,20,0,0">
+                        <TextBlock Text="⚠️ Требуется Administrator" TextWrapping="Wrap" FontSize="11" Foreground="White"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Status -->
+            <Border Grid.Column="1" Margin="15,0,0,0" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="8" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Статус" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                    
+                    <Border Background="#F0F0F0" CornerRadius="4" Padding="12" Margin="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock x:Name="AutoTuningTxt" Text="Auto-Tuning: -" Margin="0,3"/>
+                            <TextBlock x:Name="CongestionTxt" Text="Congestion: -" Margin="0,3"/>
+                            <TextBlock x:Name="EcnTxt" Text="ECN: -" Margin="0,3"/>
+                            <TextBlock x:Name="TimestampsTxt" Text="Timestamps: -" Margin="0,3"/>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                        <Button x:Name="RefreshBtn" Content="🔄 Обновить" Padding="15,8" Margin="0,0,10,0" Click="Refresh_Click"/>
+                        <Button x:Name="ApplyBtn" Content="✅ Применить" Padding="15,8" Background="#0078D4" Foreground="White" Click="Apply_Click"/>
+                        <Button x:Name="BackupBtn" Content="💾 Backup" Padding="15,8" Margin="10,0,0,0" Click="Backup_Click"/>
+                    </StackPanel>
+
+                    <TextBlock Text="Журнал:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <Border Background="Black" CornerRadius="4" Padding="10" Height="180">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <TextBlock x:Name="LogTxt" FontFamily="Consolas" FontSize="11" Foreground="LightGreen" TextWrapping="Wrap"/>
+                        </ScrollViewer>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Margin="0,20,0,0" Padding="15" Background="#F5F5F5" CornerRadius="8">
+            <TextBlock Text="© 2026 Bye-TCP Internet | MIT License" Foreground="Gray" VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter</value>
+  </resheader>
+  
+  <!-- App Title -->
+  <data name="AppTitle" xml:space="preserve">
+    <value>Bye-TCP Internet</value>
+  </data>
+  <data name="AppSubtitle" xml:space="preserve">
+    <value>Адаптивный оптимизатор TCP/IP</value>
+  </data>
+  
+  <!-- Navigation -->
+  <data name="Nav_Dashboard" xml:space="preserve">
+    <value>Дашборд</value>
+  </data>
+  <data name="Nav_Profiles" xml:space="preserve">
+    <value>Профили</value>
+  </data>
+  <data name="Nav_Rules" xml:space="preserve">
+    <value>Правила</value>
+  </data>
+  <data name="Nav_Diagnostics" xml:space="preserve">
+    <value>Диагностика</value>
+  </data>
+  <data name="Nav_Logs" xml:space="preserve">
+    <value>Логи</value>
+  </data>
+  <data name="Nav_Settings" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Nav_Advanced" xml:space="preserve">
+    <value>Дополнительно</value>
+  </data>
+  
+  <!-- Dashboard -->
+  <data name="Dashboard_ServiceStatus" xml:space="preserve">
+    <value>Статус службы</value>
+  </data>
+  <data name="Dashboard_ServiceRunning" xml:space="preserve">
+    <value>Работает</value>
+  </data>
+  <data name="Dashboard_ServiceStopped" xml:space="preserve">
+    <value>Остановлена</value>
+  </data>
+  <data name="Dashboard_CurrentProfile" xml:space="preserve">
+    <value>Текущий профиль</value>
+  </data>
+  <data name="Dashboard_NetworkMetrics" xml:space="preserve">
+    <value>Сетевые метрики</value>
+  </data>
+  <data name="Dashboard_RTT" xml:space="preserve">
+    <value>RTT</value>
+  </data>
+  <data name="Dashboard_Jitter" xml:space="preserve">
+    <value>Джиттер</value>
+  </data>
+  <data name="Dashboard_PacketLoss" xml:space="preserve">
+    <value>Потери пакетов</value>
+  </data>
+  <data name="Dashboard_Uptime" xml:space="preserve">
+    <value>Время работы</value>
+  </data>
+  
+  <!-- Profiles -->
+  <data name="Profiles_Title" xml:space="preserve">
+    <value>Профили TCP/IP</value>
+  </data>
+  <data name="Profiles_Apply" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="Profiles_Edit" xml:space="preserve">
+    <value>Изменить</value>
+  </data>
+  <data name="Profiles_Clone" xml:space="preserve">
+    <value>Клонировать</value>
+  </data>
+  <data name="Profiles_Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Profiles_CreateNew" xml:space="preserve">
+    <value>Создать профиль</value>
+  </data>
+  <data name="Profiles_Active" xml:space="preserve">
+    <value>Активен</value>
+  </data>
+  
+  <!-- Profile Editor -->
+  <data name="ProfileEditor_Name" xml:space="preserve">
+    <value>Имя профиля</value>
+  </data>
+  <data name="ProfileEditor_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="ProfileEditor_TcpAckFrequency" xml:space="preserve">
+    <value>Частота TCP ACK</value>
+  </data>
+  <data name="ProfileEditor_TcpNoDelay" xml:space="preserve">
+    <value>TCP No Delay (откл. Нагла)</value>
+  </data>
+  <data name="ProfileEditor_CongestionProvider" xml:space="preserve">
+    <value>Алгоритм перегрузки</value>
+  </data>
+  <data name="ProfileEditor_AutoTuningLevel" xml:space="preserve">
+    <value>Уровень автонастройки</value>
+  </data>
+  <data name="ProfileEditor_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="ProfileEditor_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  
+  <!-- Rules -->
+  <data name="Rules_Title" xml:space="preserve">
+    <value>Правила профилей</value>
+  </data>
+  <data name="Rules_AddRule" xml:space="preserve">
+    <value>Добавить правило</value>
+  </data>
+  <data name="Rules_ProcessName" xml:space="preserve">
+    <value>Имя процесса</value>
+  </data>
+  <data name="Rules_Priority" xml:space="preserve">
+    <value>Приоритет</value>
+  </data>
+  <data name="Rules_Profile" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  
+  <!-- Diagnostics -->
+  <data name="Diagnostics_Title" xml:space="preserve">
+    <value>Диагностика сети</value>
+  </data>
+  <data name="Diagnostics_RunPing" xml:space="preserve">
+    <value>Запустить Ping</value>
+  </data>
+  <data name="Diagnostics_Target" xml:space="preserve">
+    <value>Целевой хост</value>
+  </data>
+  <data name="Diagnostics_Count" xml:space="preserve">
+    <value>Количество</value>
+  </data>
+  <data name="Diagnostics_Start" xml:space="preserve">
+    <value>Старт</value>
+  </data>
+  <data name="Diagnostics_Stop" xml:space="preserve">
+    <value>Стоп</value>
+  </data>
+  <data name="Diagnostics_Results" xml:space="preserve">
+    <value>Результаты</value>
+  </data>
+  <data name="Diagnostics_Min" xml:space="preserve">
+    <value>Мин</value>
+  </data>
+  <data name="Diagnostics_Max" xml:space="preserve">
+    <value>Макс</value>
+  </data>
+  <data name="Diagnostics_Avg" xml:space="preserve">
+    <value>Сред</value>
+  </data>
+  
+  <!-- Logs -->
+  <data name="Logs_Title" xml:space="preserve">
+    <value>Логи службы</value>
+  </data>
+  <data name="Logs_Refresh" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="Logs_Clear" xml:space="preserve">
+    <value>Очистить</value>
+  </data>
+  <data name="Logs_Export" xml:space="preserve">
+    <value>Экспорт</value>
+  </data>
+  <data name="Logs_LiveMode" xml:space="preserve">
+    <value>Live режим</value>
+  </data>
+  <data name="Logs_Level" xml:space="preserve">
+    <value>Уровень</value>
+  </data>
+  <data name="Logs_Time" xml:space="preserve">
+    <value>Время</value>
+  </data>
+  <data name="Logs_Message" xml:space="preserve">
+    <value>Сообщение</value>
+  </data>
+  
+  <!-- Settings -->
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Settings_Backup" xml:space="preserve">
+    <value>Создать резервную копию</value>
+  </data>
+  <data name="Settings_Restore" xml:space="preserve">
+    <value>Восстановить</value>
+  </data>
+  <data name="Settings_ResetDefaults" xml:space="preserve">
+    <value>Сбросить к настройкам по умолчанию</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="Settings_Light" xml:space="preserve">
+    <value>Светлая</value>
+  </data>
+  <data name="Settings_Dark" xml:space="preserve">
+    <value>Тёмная</value>
+  </data>
+  
+  <!-- Advanced -->
+  <data name="Advanced_Title" xml:space="preserve">
+    <value>Дополнительные настройки</value>
+  </data>
+  <data name="Advanced_WFP" xml:space="preserve">
+    <value>WFP модуль</value>
+  </data>
+  <data name="Advanced_Registry" xml:space="preserve">
+    <value>Команды реестра</value>
+  </data>
+  <data name="Advanced_NetSh" xml:space="preserve">
+    <value>NetSh команды</value>
+  </data>
+  
+  <!-- Common -->
+  <data name="Common_Apply" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Common_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Common_Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="Common_No" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="Common_Loading" xml:space="preserve">
+    <value>Загрузка...</value>
+  </data>
+  <data name="Common_Error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="Common_Success" xml:space="preserve">
+    <value>Успешно</value>
+  </data>
+  <data name="Common_Confirm" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="Common_DryRun" xml:space="preserve">
+    <value>Предварительный просмотр</value>
+  </data>
+  <data name="Common_RequiresAdmin" xml:space="preserve">
+    <value>Требуются права администратора</value>
+  </data>
+  
+  <!-- Messages -->
+  <data name="Msg_ApplyConfirm" xml:space="preserve">
+    <value>Применить профиль '{0}'? Это изменит настройки TCP/IP.</value>
+  </data>
+  <data name="Msg_ApplySuccess" xml:space="preserve">
+    <value>Профиль успешно применён.</value>
+  </data>
+  <data name="Msg_ApplyFailed" xml:space="preserve">
+    <value>Не удалось применить профиль: {0}</value>
+  </data>
+  <data name="Msg_ServiceNotRunning" xml:space="preserve">
+    <value>Служба не запущена. Запустите службу Bye-TCP.</value>
+  </data>
+  <data name="Msg_Connecting" xml:space="preserve">
+    <value>Подключение к службе...</value>
+  </data>
+  <data name="Msg_Connected" xml:space="preserve">
+    <value>Подключено к службе.</value>
+  </data>
+  <data name="Msg_Disconnected" xml:space="preserve">
+    <value>Отключено от службы.</value>
+  </data>
+</root>

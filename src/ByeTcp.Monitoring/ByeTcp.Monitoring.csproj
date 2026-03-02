@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PlatformTarget>x64</PlatformTarget>
+    
+    <!-- Library Configuration -->
+    <AssemblyName>ByeTcp.Monitoring</AssemblyName>
+    <RootNamespace>ByeTcp.Monitoring</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ByeTcp.Contracts\ByeTcp.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Microsoft.Diagnostics.Tracing для ETW -->
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="8.0.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>
