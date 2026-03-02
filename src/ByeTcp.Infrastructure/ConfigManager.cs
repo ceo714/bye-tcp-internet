@@ -10,10 +10,11 @@ namespace ByeTcp.Infrastructure;
 
 /// <summary>
 /// Versioned Config Manager с JSON Schema валидацией
-/// 
+///
 /// Возможности:
 /// - Версионирование схемы конфигурации
 /// - Валидация через JSON Schema
+/// - Safe mode при несовместимой версии
 /// - Merge дефолтных и пользовательских настроек
 /// - Безопасное чтение/запись с ACL
 /// </summary>
@@ -23,8 +24,11 @@ public sealed class VersionedConfigManager : IConfigManager, IDisposable
     private readonly string _schemasPath;
     private bool _disposed;
 
+    // Текущая версия схемы
+    private const string CurrentSchemaVersion = "2026-03";
+    
     // Поддерживаемые версии схемы
-    private static readonly string[] SupportedSchemaVersions = { "2026-03", "2.0", "v2" };
+    private static readonly string[] SupportedSchemaVersions = { "2026-03", "2026-02", "2.0", "v2" };
 
     public VersionedConfigManager(
         ILogger<VersionedConfigManager> logger,
@@ -58,16 +62,36 @@ public sealed class VersionedConfigManager : IConfigManager, IDisposable
             _logger.LogDebug("Загрузка конфигурации. Версия: {Version}, Schema: {SchemaVersion}",
                 version, schemaVersion);
 
-            // 3. Version compatibility check
-            if (!IsVersionCompatible(version) && !IsVersionCompatible(schemaVersion))
+            // 3. Schema version validation с safe mode
+            var schemaValidationResult = ValidateSchemaVersion(schemaVersion);
+            if (!schemaValidationResult.IsValid)
             {
-                return ConfigResult<T>.ErrorResult(
-                    $"Несовместимая версия: {version} (schema: {schemaVersion}). " +
-                    $"Поддерживаемые: {string.Join(", ", SupportedSchemaVersions)}");
+                _logger.LogWarning(
+                    "⚠️ Schema version mismatch: {ActualVersion}. Ожидалась: {ExpectedVersion}. Переход в safe mode.",
+                    schemaVersion, CurrentSchemaVersion);
+                
+                // Возвращаем результат с флагом safe mode
+                return new ConfigResult<T>
+                {
+                    Success = false,
+                    Errors = new List<string> 
+                    { 
+                        $"Несовместимая версия схемы: {schemaVersion}. Ожидалась: {CurrentSchemaVersion}. Используется профиль по умолчанию." 
+                    },
+                    Config = null
+                };
             }
 
-            // 4. JSON Schema validation (упрощённая - без NJsonSchema)
-            // TODO: Добавить валидацию при необходимости
+            // 4. JSON Schema validation (если схема предоставлена)
+            if (schema != null)
+            {
+                var validationResult = ValidateJsonSchema(json, schema);
+                if (!validationResult.IsValid)
+                {
+                    _logger.LogWarning("Валидация JSON Schema не пройдена: {Errors}", 
+                        string.Join(", ", validationResult.Errors));
+                }
+            }
 
             // 5. Deserialize
             var config = JsonConvert.DeserializeObject<T>(json);
@@ -77,7 +101,7 @@ public sealed class VersionedConfigManager : IConfigManager, IDisposable
                 return ConfigResult<T>.ErrorResult("Не удалось десериализовать конфигурацию");
             }
 
-            _logger.LogInformation("✅ Конфигурация загружена: {Path}", path);
+            _logger.LogInformation("✅ Конфигурация загрушена: {Path}", path);
 
             return ConfigResult<T>.SuccessResult(config);
         }
@@ -88,10 +112,62 @@ public sealed class VersionedConfigManager : IConfigManager, IDisposable
         }
     }
 
+    /// <summary>
+    /// Валидация версии схемы
+    /// </summary>
+    private SchemaValidationResult ValidateSchemaVersion(string schemaVersion)
+    {
+        if (string.IsNullOrWhiteSpace(schemaVersion))
+        {
+            return new SchemaValidationResult { IsValid = false, Error = "Schema version is empty" };
+        }
+
+        // Проверяем совместимость
+        if (IsVersionCompatible(schemaVersion))
+        {
+            return new SchemaValidationResult { IsValid = true };
+        }
+
+        return new SchemaValidationResult 
+        { 
+            IsValid = false, 
+            Error = $"Unsupported schema version: {schemaVersion}. Expected: {CurrentSchemaVersion}" 
+        };
+    }
+
+    /// <summary>
+    /// Упрощённая валидация JSON Schema
+    /// </summary>
+    private ValidationResult ValidateJsonSchema(string json, object schemaObj)
+    {
+        try
+        {
+            // Если схема передана как JsonSchema из NJsonSchema
+            if (schemaObj is NJsonSchema.JsonSchema jsonSchema)
+            {
+                var errors = jsonSchema.Validate(json);
+                if (errors.Count > 0)
+                {
+                    return new ValidationResult 
+                    { 
+                        IsValid = false, 
+                        Errors = errors.Select(e => e.ToString()).ToList() 
+                    };
+                }
+            }
+            
+            return new ValidationResult { IsValid = true, Errors = new List<string>() };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Ошибка валидации JSON Schema");
+            return new ValidationResult { IsValid = true, Errors = new List<string>() };
+        }
+    }
+
     public ValidationResult Validate<T>(T config, object schema)
     {
         // Упрощённая валидация - всегда проходит
-        // TODO: Добавить валидацию при необходимости
         return new ValidationResult { IsValid = true, Errors = new List<string>() };
     }
 
@@ -99,7 +175,8 @@ public sealed class VersionedConfigManager : IConfigManager, IDisposable
     {
         return SupportedSchemaVersions.Any(v =>
             version.StartsWith(v, StringComparison.OrdinalIgnoreCase) ||
-            version.Contains(v, StringComparison.OrdinalIgnoreCase));
+            version.Contains(v, StringComparison.OrdinalIgnoreCase) ||
+            version.Equals(v, StringComparison.OrdinalIgnoreCase));
     }
 
     public T MergeConfigs<T>(T defaultConfig, T userConfig)
@@ -107,14 +184,14 @@ public sealed class VersionedConfigManager : IConfigManager, IDisposable
         // Deep merge через JSON
         var defaultJson = JObject.FromObject(defaultConfig);
         var userJson = JObject.FromObject(userConfig);
-        
+
         // Merge: user config overrides default
         defaultJson.Merge(userJson, new JsonMergeSettings
         {
             MergeArrayHandling = MergeArrayHandling.Replace,
             MergeNullValueHandling = MergeNullValueHandling.Ignore
         });
-        
+
         return defaultJson.ToObject<T>()!;
     }
 
@@ -128,15 +205,15 @@ public sealed class VersionedConfigManager : IConfigManager, IDisposable
         {
             Directory.CreateDirectory(directory);
         }
-        
+
         var json = JsonConvert.SerializeObject(config, Formatting.Indented);
         await File.WriteAllTextAsync(path, json);
-        
+
         if (secureAcl)
         {
             SecureFile(path);
         }
-        
+
         _logger.LogDebug("Конфигурация сохранена: {Path}", path);
     }
 
@@ -149,10 +226,10 @@ public sealed class VersionedConfigManager : IConfigManager, IDisposable
         {
             var fileInfo = new FileInfo(path);
             var security = fileInfo.GetAccessControl();
-            
+
             // Disable inheritance
             security.SetAccessRuleProtection(true, false);
-            
+
             // Grant Administrators full control
             var adminRule = new FileSystemAccessRule(
                 new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null),
@@ -161,7 +238,7 @@ public sealed class VersionedConfigManager : IConfigManager, IDisposable
                 PropagationFlags.None,
                 AccessControlType.Allow
             );
-            
+
             // Grant SYSTEM read
             var systemRule = new FileSystemAccessRule(
                 new SecurityIdentifier(WellKnownSidType.LocalSystemSid, null),
@@ -170,9 +247,8 @@ public sealed class VersionedConfigManager : IConfigManager, IDisposable
                 PropagationFlags.None,
                 AccessControlType.Allow
             );
-            
+
             // Grant Service SID read (для Windows Service)
-            // Используем SID S-1-5-6 для NT SERVICE
             try
             {
                 var serviceSid = new SecurityIdentifier("S-1-5-6");
@@ -189,7 +265,7 @@ public sealed class VersionedConfigManager : IConfigManager, IDisposable
             {
                 // NT Service SID может быть недоступен
             }
-            
+
             fileInfo.SetAccessControl(security);
         }
         catch (Exception ex)
@@ -205,6 +281,15 @@ public sealed class VersionedConfigManager : IConfigManager, IDisposable
         _disposed = true;
         GC.SuppressFinalize(this);
     }
+}
+
+/// <summary>
+/// Результат валидации версии схемы
+/// </summary>
+public sealed class SchemaValidationResult
+{
+    public bool IsValid { get; init; }
+    public string? Error { get; init; }
 }
 
 /// <summary>
@@ -242,7 +327,7 @@ public static class SecurityHelper
     {
         if (IsRunningAsAdministrator())
             return true;
-        
+
         try
         {
             var processInfo = new System.Diagnostics.ProcessStartInfo
@@ -252,7 +337,7 @@ public static class SecurityHelper
                 UseShellExecute = true,
                 Verb = "runas" // Запрос UAC elevation
             };
-            
+
             System.Diagnostics.Process.Start(processInfo);
             return true;
         }

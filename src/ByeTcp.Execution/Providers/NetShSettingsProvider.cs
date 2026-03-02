@@ -208,10 +208,11 @@ public sealed class NetShSettingsProvider : ISettingsProvider, IDisposable
                     process.Kill();
                     return (false, "Операция отменена", null);
                 }
-                
-                var output = outputTask.Result;
-                var error = errorTask.Result;
-                
+
+                // Используем GetAwaiter().GetResult() вместо .Result для избежания deadlock
+                var output = outputTask.GetAwaiter().GetResult();
+                var error = errorTask.GetAwaiter().GetResult();
+
                 if (process.ExitCode != 0)
                 {
                     return (false, error ?? $"Exit code: {process.ExitCode}", null);

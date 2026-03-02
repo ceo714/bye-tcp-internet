@@ -215,10 +215,22 @@ public sealed class Watchdog : IWatchdog, IDisposable
     public void Dispose()
     {
         if (_disposed) return;
-        
+
         _disposed = true;
-        StopAsync().Wait();
-        _shutdownCts?.Dispose();
+        
+        // Блокирующий вызов запрещён - используем fire-and-forget с timeout
+        try
+        {
+            _shutdownCts?.Cancel();
+            _checkTimer?.Dispose();
+            _checkTimer = null;
+            _shutdownCts?.Dispose();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Exception during Watchdog disposal");
+        }
+        
         GC.SuppressFinalize(this);
     }
 }

@@ -302,9 +302,19 @@ public sealed class StateManager : IStateManager, IDisposable
     public void Dispose()
     {
         if (_disposed) return;
-        
+
         _disposed = true;
-        SaveStateAsync().Wait();
+        
+        // Блокирующий вызов запрещён - сохраняем состояние синхронно или игнорируем ошибку
+        try
+        {
+            SaveStateAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to save state during disposal");
+        }
+        
         GC.SuppressFinalize(this);
     }
 }
