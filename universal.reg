@@ -1,0 +1,56 @@
+Windows Registry Editor Version 5.00
+
+; =====================================================
+; bye-tcp-internet — Industrial Universal TCP Profile
+; Author: ceo14
+; GitHub: https://github.com/ceo714
+; Target: Windows 10/11 (Modern TCP Stack, 2026)
+; =====================================================
+;
+; Description:
+; Minimal, industrial-grade TCP/IP overrides.
+; No legacy tweaks. No placebo. No deprecated parameters.
+; Designed for modern Windows networking stack (CUBIC + AutoTuning).
+;
+; Apply:
+; 1. Run as Administrator
+; 2. Reboot system after import
+;
+; Use at your own risk.
+
+; =====================================================
+; TCP/IP Core Parameters (Modern Stack Safe Overrides)
+; =====================================================
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+"DefaultTTL"=dword:00000040
+"EnablePMTUDiscovery"=dword:00000001
+"EnablePMTUBHDetect"=dword:00000000
+"SackOpts"=dword:00000001
+"Tcp1323Opts"=dword:00000001
+"MaxUserPort"=dword:0000fffe
+"TcpTimedWaitDelay"=dword:0000001e
+
+; =====================================================
+; DNS Client Behavior (Balanced Stability)
+; =====================================================
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters]
+"MaxNegativeCacheTtl"=dword:0000003c
+"NegativeCacheTime"=dword:0000003c
+"NetFailureCacheTime"=dword:0000001e
+
+; =====================================================
+; Multimedia Network Throttling (Remove Limiter)
+; =====================================================
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
+"NetworkThrottlingIndex"=dword:ffffffff
+"SystemResponsiveness"=dword:00000014
+
+; =====================================================
+; QoS Policy (Effective only if QoS Policy Engine active)
+; =====================================================
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Psched]
+"NonBestEffortLimit"=dword:00000000
