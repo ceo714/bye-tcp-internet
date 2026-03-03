@@ -1,0 +1,36 @@
+Windows Registry Editor Version 5.00
+
+; ==========================================================
+; GMVELOCITY — ROLLBACK
+; Author: ceo14
+; GitHub: https://github.com/ceo714
+; Restores default Windows 10/11 behavior
+; ==========================================================
+
+
+; --- Restore Multimedia Network Throttling (default = 10) ---
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
+"NetworkThrottlingIndex"=dword:0000000a
+
+
+; --- Restore MMCSS Games Task Defaults ---
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games]
+"GPU Priority"=-
+"Priority"=-
+"Scheduling Category"=-
+"SFIO Priority"=-
+
+
+; --- Remove TCP Overrides ---
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+"EnablePMTUDiscovery"=-
+"SackOpts"=-
+"TcpTimedWaitDelay"=-
+"MaxUserPort"=-
+"EnableECNCapability"=-
+
+
+; --- Restore DNS Cache Defaults ---
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters]
+"NegativeCacheTime"=-
+"NetFailureCacheTime"=-

@@ -1,0 +1,28 @@
+Windows Registry Editor Version 5.00
+
+; ==========================================================
+; UNIVERSAL BASELINE — ROLLBACK
+; Author: ceo14
+; GitHub: https://github.com/ceo714
+; Removes manual TCP/IP overrides
+; ==========================================================
+
+
+; --- Restore Multimedia Network Throttling ---
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
+"NetworkThrottlingIndex"=dword:0000000a
+
+
+; --- Remove TCP Overrides ---
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+"EnablePMTUDiscovery"=-
+"SackOpts"=-
+"TcpTimedWaitDelay"=-
+"MaxUserPort"=-
+"EnableECNCapability"=-
+
+
+; --- Restore DNS Cache Defaults ---
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters]
+"NegativeCacheTime"=-
+"NetFailureCacheTime"=-

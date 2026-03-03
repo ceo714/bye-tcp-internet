@@ -1,0 +1,68 @@
+Windows Registry Editor Version 5.00
+
+; ==========================================================
+; GMVELOCITY — Low-Latency Gaming Profile (Reg-Only)
+; Author: ceo14
+; GitHub: https://github.com/ceo714
+; Windows 10/11 Modern TCP/IP Stack
+; Minimal • Measurable • Reversible
+; ==========================================================
+
+
+; ----------------------------------------------------------
+; Remove Multimedia Network Throttling
+; (eliminates artificial packet processing cap)
+; ----------------------------------------------------------
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
+"NetworkThrottlingIndex"=dword:ffffffff
+
+
+; ----------------------------------------------------------
+; MMCSS - Prioritize Games
+; (higher scheduling priority for game tasks)
+; ----------------------------------------------------------
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games]
+"GPU Priority"=dword:00000008
+"Priority"=dword:00000006
+"Scheduling Category"="High"
+"SFIO Priority"="High"
+
+
+; ----------------------------------------------------------
+; Ensure Modern TCP Features Enabled
+; ----------------------------------------------------------
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+"EnablePMTUDiscovery"=dword:00000001
+"SackOpts"=dword:00000001
+
+
+; ----------------------------------------------------------
+; Reduce TIME_WAIT duration (default ~240s → 30s)
+; Faster port reuse during reconnects
+; ----------------------------------------------------------
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+"TcpTimedWaitDelay"=dword:0000001e
+
+
+; ----------------------------------------------------------
+; Expand Ephemeral Port Range (default 16384 → 65534)
+; Prevent port exhaustion in intensive sessions
+; ----------------------------------------------------------
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+"MaxUserPort"=dword:0000fffe
+
+
+; ----------------------------------------------------------
+; Reduce DNS Negative Cache Delay
+; Avoid reconnection stalls after failed lookups
+; ----------------------------------------------------------
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters]
+"NegativeCacheTime"=dword:00000000
+"NetFailureCacheTime"=dword:00000000
+
+
+; ----------------------------------------------------------
+; Disable ECN (gaming compatibility bias)
+; ----------------------------------------------------------
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+"EnableECNCapability"=dword:00000000
