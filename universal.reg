@@ -2,54 +2,102 @@ Windows Registry Editor Version 5.00
 
 ; =====================================================
 ; bye-tcp-internet — Industrial Universal TCP Profile
-; Author: ceo14
-; GitHub: https://github.com/ceo714
-; Target: Windows 10/11 (Modern TCP Stack, 2026)
+; Author: ceo714
+; GitHub: https://github.com/ceo714/bye-tcp-internet
+; Version: 1.2.0
+; Target: Windows 10 (22H2+) / Windows 11 / Server 2022/2025
 ; =====================================================
 ;
+; Philosophy: Minimal • Measurable • Reversible
+;
 ; Description:
-; Minimal, industrial-grade TCP/IP overrides.
-; No legacy tweaks. No placebo. No deprecated parameters.
-; Designed for modern Windows networking stack (CUBIC + AutoTuning).
+;   Minimal, industrial-grade TCP/IP overrides.
+;   No legacy tweaks. No placebo. No deprecated parameters.
+;   Designed for modern Windows networking stack (CUBIC + AutoTuning).
 ;
 ; Apply:
-; 1. Run as Administrator
-; 2. Reboot system after import
+;   1. Run as Administrator
+;   2. Reboot system after import
 ;
-; Use at your own risk.
+; Verify after reboot:
+;   netsh int tcp show global
+;   powershell "Get-NetTCPSetting -SettingName internet"
+;
+; Use at your own risk. See universal-rollback.reg to undo.
+; =====================================================
+
 
 ; =====================================================
 ; TCP/IP Core Parameters (Modern Stack Safe Overrides)
 ; =====================================================
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+
+; TTL = 64 (standard Linux/modern default; improves route diagnostics)
 "DefaultTTL"=dword:00000040
+
+; Path MTU Discovery — avoids fragmentation on modern networks
 "EnablePMTUDiscovery"=dword:00000001
+
+; Black Hole detection — disabled (causes slowdowns, PMTU handles this)
 "EnablePMTUBHDetect"=dword:00000000
+
+; SACK (Selective Acknowledgment) — critical for loss recovery
 "SackOpts"=dword:00000001
+
+; RFC 1323: Window Scaling + Timestamps (bit 0 = WS, bit 1 = TS)
+; Value 1 = Window Scaling only (safe, reduces overhead vs value 3)
 "Tcp1323Opts"=dword:00000001
+
+; Expand ephemeral port range: 1025–65534 (default is 49152–65535)
+; Prevents port exhaustion under heavy concurrent connections
 "MaxUserPort"=dword:0000fffe
+
+; TIME_WAIT: 30s instead of default 240s
+; Faster port reuse without sacrificing reliability
 "TcpTimedWaitDelay"=dword:0000001e
+
+; ECN disabled — better compatibility with routers/firewalls
+; ECN is often mishandled by ISP equipment
+"EnableECNCapability"=dword:00000000
+
 
 ; =====================================================
 ; DNS Client Behavior (Balanced Stability)
 ; =====================================================
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters]
+
+; Max negative cache TTL: 60s (default is 300s)
+; Reduces stale NXDOMAIN caching
 "MaxNegativeCacheTtl"=dword:0000003c
+
+; Negative cache time: 60s — balanced for workstations
 "NegativeCacheTime"=dword:0000003c
+
+; Network failure cache: 30s — retry failed lookups sooner
 "NetFailureCacheTime"=dword:0000001e
+
 
 ; =====================================================
 ; Multimedia Network Throttling (Remove Limiter)
+; Prevents Windows from capping bandwidth during media playback
 ; =====================================================
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
+
+; Disable throttling index (0xFFFFFFFF = unlimited)
 "NetworkThrottlingIndex"=dword:ffffffff
+
+; System responsiveness: 20% reserved for background tasks
+; (default = 20, kept at safe default)
 "SystemResponsiveness"=dword:00000014
 
+
 ; =====================================================
-; QoS Policy (Effective only if QoS Policy Engine active)
+; QoS Policy — Remove Reserved Bandwidth Limit
+; Effective only if QoS Policy Engine (psched) is active
+; Default reserves 20% — this removes the reservation
 ; =====================================================
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Psched]

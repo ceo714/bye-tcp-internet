@@ -1,28 +1,52 @@
 Windows Registry Editor Version 5.00
 
 ; ==========================================================
-; UNIVERSAL BASELINE — ROLLBACK
-; Author: ceo14
-; GitHub: https://github.com/ceo714
-; Removes manual TCP/IP overrides
+; bye-tcp-internet — UNIVERSAL BASELINE ROLLBACK
+; Author: ceo714
+; GitHub: https://github.com/ceo714/bye-tcp-internet
+; Version: 1.2.0
+; ==========================================================
+;
+; Description:
+;   Removes all overrides applied by universal.reg.
+;   Deletes registry keys to restore Windows Hardcoded Defaults.
+;   Does NOT touch MMCSS Tasks\Games (not modified by universal.reg).
+;
+; Apply:
+;   1. Run as Administrator
+;   2. Reboot system after import
 ; ==========================================================
 
 
-; --- Restore Multimedia Network Throttling ---
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
-"NetworkThrottlingIndex"=dword:0000000a
+; --- Remove TCP/IP Core Overrides ---
 
-
-; --- Remove TCP Overrides ---
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+"DefaultTTL"=-
 "EnablePMTUDiscovery"=-
+"EnablePMTUBHDetect"=-
 "SackOpts"=-
-"TcpTimedWaitDelay"=-
+"Tcp1323Opts"=-
 "MaxUserPort"=-
+"TcpTimedWaitDelay"=-
 "EnableECNCapability"=-
 
 
 ; --- Restore DNS Cache Defaults ---
+
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters]
+"MaxNegativeCacheTtl"=-
 "NegativeCacheTime"=-
 "NetFailureCacheTime"=-
+
+
+; --- Restore Multimedia Network Throttling (Windows default = 10) ---
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile]
+"NetworkThrottlingIndex"=dword:0000000a
+"SystemResponsiveness"=dword:00000014
+
+
+; --- Remove QoS Override ---
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Psched]
+"NonBestEffortLimit"=-
