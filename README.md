@@ -1,5 +1,7 @@
 # bye-tcp-internet
 
+![](bye-tcp-internet.png)
+
 **Industrial-grade TCP/IP baseline profile for modern Windows 10/11 networking stacks.**
 
 No legacy tweaks. No placebo. No deprecated parameters.
